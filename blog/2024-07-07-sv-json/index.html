@@ -1,0 +1,342 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,400;0,700;1,400&family=Source+Sans+Pro:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="../../theme/stylesheet/style.min.css">
+
+    <link id="dark-theme-style" rel="stylesheet" type="text/css"
+          media="(prefers-color-scheme: dark), (prefers-color-scheme: no-preference)"
+    href="../../theme/stylesheet/dark-theme.min.css">
+
+    <link id="pygments-dark-theme" rel="stylesheet" type="text/css"
+              media="(prefers-color-scheme: dark), (prefers-color-scheme: no-preference)"
+          href="../../theme/pygments/monokai.min.css">
+    <link id="pygments-light-theme" rel="stylesheet" type="text/css"
+              media="(prefers-color-scheme: light)"
+          href="../../theme/pygments/emacs.min.css">
+
+
+
+  <link rel="stylesheet" type="text/css" href="../../theme/font-awesome/css/fontawesome.css">
+  <link rel="stylesheet" type="text/css" href="../../theme/font-awesome/css/brands.css">
+  <link rel="stylesheet" type="text/css" href="../../theme/font-awesome/css/solid.css">
+
+  <link rel="stylesheet" type="text/css" href="../../assets/css/myblog.css">
+
+
+  <!-- Chrome, Firefox OS and Opera -->
+  <meta name="theme-color" content="#369DBE">
+  <!-- Windows Phone -->
+  <meta name="msapplication-navbutton-color" content="#369DBE">
+  <!-- iOS Safari -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <!-- Microsoft EDGE -->
+  <meta name="msapplication-TileColor" content="#369DBE">
+
+  <link href="https://positive-slack.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="positive slack blog Atom">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7JN7249338"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() { dataLayer.push(arguments); }
+  gtag('js', new Date());
+
+  gtag('config', 'G-7JN7249338');
+</script>
+
+
+
+
+
+
+ 
+
+<meta name="author" content="esynr3z" />
+<meta name="description" content="I decided that there aren&#39;t enough JSON encoders/decoders in SystemVerilog." />
+<meta name="keywords" content="systemverilog">
+
+
+  <meta property="og:site_name" content="positive slack blog"/>
+  <meta property="og:title" content="Implementing JSON encoder and decoder in pure SystemVerilog"/>
+  <meta property="og:description" content="I decided that there aren&#39;t enough JSON encoders/decoders in SystemVerilog."/>
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:url" content="../../blog/2024-07-07-sv-json/"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2024-07-07 10:10:00+03:00"/>
+  <meta property="article:modified_time" content="2024-09-21 20:26:36.727514+03:00"/>
+  <meta property="article:author" content="../../author/esynr3z/">
+  <meta property="article:section" content="Verification"/>
+  <meta property="article:tag" content="systemverilog"/>
+  <meta property="og:image" content="/assets/logo.jpg">
+
+  <title>positive slack blog &ndash; Implementing JSON encoder and decoder in pure SystemVerilog</title>
+
+
+</head>
+<body >
+
+<aside>
+  <div>
+    <a href="../../">
+      <img src="/assets/logo.jpg" alt="positive slack blog" title="positive slack blog">
+    </a>
+
+    <h1>
+      <a href="../../">positive slack blog</a>
+    </h1>
+
+    <p>digital design, verification and collaterals</p>
+
+
+
+    <ul class="social">
+      <li>
+        <a class="sc-question"
+           href="/pages/about/"
+           target="_blank">
+          <i class="fa-solid fa-question"></i>
+        </a>
+      </li>
+      <li>
+        <a class="sc-github"
+           href="https://github.com/esynr3z"
+           target="_blank">
+          <i class="fa-brands fa-github"></i>
+        </a>
+      </li>
+      <li>
+        <a class="sc-telegram"
+           href="https://t.me/positiveslack"
+           target="_blank">
+          <i class="fa-brands fa-telegram"></i>
+        </a>
+      </li>
+      <li>
+        <a class="sc-comment"
+           href="https://github.com/positive-slack/positive-slack.github.io/discussions/categories/feedback"
+           target="_blank">
+          <i class="fa-solid fa-comment"></i>
+        </a>
+      </li>
+      <li>
+        <a class="sc-rss"
+           href="/feeds/all.atom.xml"
+           target="_blank">
+          <i class="fa-solid fa-rss"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+</aside>
+  <main>
+
+<nav>
+  <a href="../../">Home</a>
+
+  <a href="/tag/">Tags</a>
+  <a href="/category/">Categories</a>
+  <a href="/archive/">Archives</a>
+</nav>
+
+<article class="single">
+  <header>
+      
+    <h1 id="2024-07-07-sv-json">Implementing JSON encoder and decoder in pure SystemVerilog</h1>
+    <p>
+      Posted on 07 Jul 2024 in <a href="../../category/verification/">Verification</a>
+
+        &#8226; 2 min read
+    </p>
+  </header>
+
+
+  <div>
+    <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#overview">Overview</a></li>
+<li><a href="#development-and-testing">Development and testing</a></li>
+<li><a href="#documentation">Documentation</a></li>
+<li><a href="#automation">Automation</a></li>
+<li><a href="#where-to-start">Where to start?</a></li>
+</ul>
+</div>
+<p>Why JSON? Because it's simple enough and well-formalized, making it easy to load and dump.
+It's supported everywhere, and it's still human-readable.
+Overall, it's the perfect "the great equalizer" if we want to pass data, configurations, metrics, traces, transactions, and other stuff between simulation and the outside world through IO.</p>
+<h2 id="overview">Overview</h2>
+<p>So here it is <a href="https://github.com/esynr3z/svjson">on GitHub</a>. And documention is <a href="https://esynr3z.github.io/svjson">on GitHub Pages</a>.</p>
+<p>No UVM, DPI, or external dependencies - just pure SV.
+It has almost full support for the specification (I didn't support Unicode, sorry about that).
+And there's even some SV-specific features.</p>
+<p>You can read JSON, dump it, inspect, modify, and manually create an object tree.
+You can even implement a special interface class in any of your own classes and gain the ability to dump that class into JSON.
+There is a transparent mechanism for signaling decoding errors. In short, everything you'd expect from normal languages.</p>
+<h2 id="development-and-testing">Development and testing</h2>
+<p>I used <a href="https://github.com/svunit/svunit">SVUnit</a> and <a href="https://github.com/verilator/verilator">Verilator</a>.
+Tests include both my own and those using the external <a href="https://github.com/nst/JSONTestSuite">JSONTestSuite</a> set.</p>
+<p>Working with Verilator is not really easy - you often end up debugging Verilator itself instead of your logic.
+As a result, a dozen bugs were filed for Verilator (btw, most of them fixed), and its compatibility with <a href="https://github.com/svunit/svunit/issues/297">SVUnit was even improved</a>.
+In the end, almost 20% of the changelog for version 5.024 was reported by me.
+"It ain't much, but it's honest work.jpg"
+Anyway, let that sink in - <strong>Verilator already works decently with fairly abstract OOP code!</strong>
+So, regardless of everything, the positive side effect of slightly improving the open-source tools already justifies the whole idea 100%.</p>
+<h2 id="documentation">Documentation</h2>
+<p>I really like AsciiDoc.
+From the very beginning, I looked for ways to set up GitHub Pages with it.
+Fortunately, I found the <a href="https://antora.org/">Antora</a> project, which seems to be one of a kind.
+All other site and documentation generators either don't support AsciiDoc or only do so with extra plugins and workarounds.
+However, Antora's default UI has some drawbacks (for example, no SV syntax highlighting in the documentation), but everything is fixable.</p>
+<h2 id="automation">Automation</h2>
+<p>Everything mentioned above has been "put on paper" <a href="https://github.com/esynr3z/svjson/tree/main/.github/workflows">using GitHub Actions</a>, and it just "goes brrr" on new PRs and pushes to the master branch.
+By the way, besides Verilator, I also set up ModelSim (the version from Altera) - this is the only commercial simulator you can download via a direct link and run without a separate license (though, I don't really know how legal that action is).</p>
+<p>In the end, with just a bit more work, the infrastructure will be almost on par with what's available out-of-the-box in major programming languages, with no difficulties.</p>
+<h2 id="where-to-start">Where to start?</h2>
+<p><a href="https://esynr3z.github.io/svjson/json_pkg/main/welcome.html">Documenation homepage</a> is a perfect place.</p>
+  </div>
+  <div class="tag-cloud">
+    <p>
+      <a href="../../tag/systemverilog/">systemverilog</a>
+    </p>
+  </div>
+
+
+  <div class="neighbors">
+    <a class="btn float-left" href="../../blog/2024-01-27-pip-hdl/" title="Using pip to Manage HDL Components">
+      <i class="fa fa-angle-left"></i> Previous Post
+    </a>
+  </div>
+
+  <div class="related-posts">
+    <h4>You might enjoy</h4>
+    <ul class="related-posts">
+      <li><a href="../../blog/2024-01-14-const-ref-sv/">Constant Reference in SystemVerilog: Is It Really Constant?</a></li>
+    </ul>
+  </div>
+
+
+
+<!-- Giscus -->
+<script>
+    function getCurrentTheme() {
+        if (document.body.classList.contains('dark-theme')) {
+            return 'dark'
+        } else if (document.body.classList.contains('light-theme')) {
+            return 'light'
+        } else {
+            var darkThemeMatch = window.matchMedia('(prefers-color-scheme: dark)');
+            var theme = localStorage.getItem('themeOverride');
+            if (theme !== 'light' && theme !== 'dark') {
+                if (theme === 'browser' || enableAutoDetectTheme) {
+                    theme = darkThemeMatch.matches ? 'dark' : 'light';
+                } else {
+                    theme = "dark";
+                }
+            }
+            return theme;
+        }
+    }
+
+    function updateGiscusTheme() {
+        console.log("updateGiscusTheme() called");
+
+        function sendMessage(message) {
+            const iframe = document.querySelector('iframe.giscus-frame');
+            if (!iframe) return;
+            iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+
+        const currentTheme = getCurrentTheme();
+        console.log("Changing theme to ", currentTheme);
+        sendMessage({
+            setConfig: {
+                theme: currentTheme,
+            },
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const giscusAttributes = {
+            "src": "https://giscus.app/client.js",
+            "data-repo": "positive-slack/positive-slack.github.io",
+            "data-repo-id": "R_kgDOK9PAQQ",
+            "data-category": "Posts",
+            "data-category-id": "DIC_kwDOK9PAQc4CcALQ",
+            "data-mapping": "title",
+            "data-strict": "1",
+            "data-reactions-enabled": "1",
+            "data-emit-metadata": "0",
+            "data-input-position": "bottom",
+            "data-theme": getCurrentTheme(),
+            "data-lang": "en",
+            "crossorigin": "anonymous",
+            "async": "",
+        };
+
+        // Dynamically create script tag
+        const giscusScript = document.createElement("script");
+        Object.entries(giscusAttributes).forEach(([key, value]) => giscusScript.setAttribute(key, value));
+        const targetElement = document.querySelector('article');
+        targetElement.appendChild(giscusScript);
+        updateGiscusTheme()
+
+        // Update giscus theme when theme switcher is clicked
+        document.body.addEventListener('themeChange', updateGiscusTheme);
+    });
+</script>
+
+<noscript>
+    Please enable JavaScript to view comments.
+</noscript>
+<!-- End Giscus -->
+</article>
+
+<footer>
+<p>
+  &copy; 2024  - This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/deed.en_US" target="_blank">Creative Commons Attribution-ShareAlike 4.0 International License</a>
+</p>
+<p>
+Built with <a href="http://getpelican.com" target="_blank">Pelican</a> using <a href="http://bit.ly/flex-pelican" target="_blank">Flex</a> theme
+  <span class="footer-separator">|</span>
+  Switch to the <a href="javascript:void(0)" onclick="theme.switch(`dark`)">dark</a> | <a href="javascript:void(0)" onclick="theme.switch(`light`)">light</a> | <a href="javascript:void(0)" onclick="theme.switch(`browser`)">browser</a> theme
+  <script id="dark-theme-script"
+          src="../../theme/dark-theme/dark-theme.min.js"
+          data-enable-auto-detect-theme="True"
+          data-default-theme="dark"
+          type="text/javascript">
+  </script>
+</p><p>
+  <a rel="license"
+     href="http://creativecommons.org/licenses/by-sa/4.0/"
+     target="_blank">
+    <img alt="Creative Commons License"
+         title="Creative Commons License"
+         style="border-width:0"
+           src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png"
+         width="80"
+         height="15"/>
+  </a>
+</p>  <p>DISCLAIMER. Everything I share here are my own thoughts and opinions. They're not connected to my employer in any way.</p>
+</footer>  </main>
+
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " positive slack blog ",
+  "url" : "../..",
+  "image": "/assets/logo.jpg",
+  "description": "digital design, verification and collaterals"
+}
+</script>
+</body>
+</html>
